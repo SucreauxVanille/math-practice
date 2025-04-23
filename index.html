@@ -65,8 +65,15 @@
       "うっかりミス注意！"
     ];
 
+    const displayOp = {
+      '+': '+',
+      '-': '-',
+      '*': '×',
+      '/': '÷'
+    };
+
     function generateProblem() {
-      let ops = ['+', '-', '×', '÷'];
+      let ops = ['+', '-', '*', '/'];
       let op1 = ops[Math.floor(Math.random() * ops.length)];
       let op2 = ops[Math.floor(Math.random() * ops.length)];
 
@@ -88,14 +95,12 @@
         try {
           result = eval(expression);
           if (Number.isInteger(result) && result >= 0) {
-            // 引き算で負にならないか確認
             if (!(op1 === '-' && eval(`${num1} - ${num2}`) < 0) &&
                 !(op2 === '-' && eval(`${num1} ${op1} ${num2}`) - num3 < 0)) {
               valid = true;
             }
           }
         } catch (e) {
-          // エラー無視して再試行
         }
         attempts++;
       }
@@ -105,7 +110,12 @@
         return;
       }
 
-      document.getElementById("problem").innerText = expression;
+      // 表示用に記号を置き換える
+      const displayExpression = expression
+        .replace(op1, displayOp[op1])
+        .replace(op2, displayOp[op2]);
+
+      document.getElementById("problem").innerText = displayExpression;
       currentAnswer = result;
       document.getElementById("answer").innerText = "";
       document.getElementById("message").innerText = "";
@@ -121,7 +131,7 @@
 
       if (questionCount % 5 === 0) {
         const msg = encouragements[Math.floor(Math.random() * encouragements.length)];
-        document.getElementById("message").innerText = `${questionCount}問目！${msg}`;
+        document.getElementById("message").innerText = `今${questionCount}問目！${msg}`;
       }
     });
 
@@ -129,7 +139,6 @@
       generateProblem();
     });
 
-    // 初回表示
     generateProblem();
   </script>
 </body>
