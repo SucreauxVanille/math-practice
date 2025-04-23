@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ランダム計算</title>
+  <title>計算練習</title>
   <style>
     body {
       font-family: sans-serif;
@@ -12,8 +12,12 @@
       font-size: 1.5em;
     }
     #problem {
-      font-size: 2em;
+      font-size: 5vw; /* スマホでも1行に収まりやすくする */
       margin: 1em 0;
+      word-break: keep-all;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     button {
       font-size: 1.2em;
