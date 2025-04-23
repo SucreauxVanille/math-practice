@@ -63,48 +63,63 @@
   <div id="encouragement" style="margin-top: 20px; font-size: 1.2em; font-weight: bold; display: none; color: #2e7d32;"></div>
 
   <script>
-    let currentExpression = "";
-    let currentAnswer = 0;
+let currentExpression = "";
+let currentAnswer = 0;
+let problemCount = 0;
 
-    function getRandomInt(min, max) {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
+const encouragements = [
+  "がんばって！",
+  "まだまだ行ける！？",
+  "連続だからこそ慎重に！",
+  "集中キープ中！ナイス！",
+  "ここからが本番！"
+];
 
-    function generateProblem() {
-      const ops = ['+', '-', '*', '/'];
-      let op1 = ops[Math.floor(Math.random() * ops.length)];
-      let op2 = ops[Math.floor(Math.random() * ops.length)];
+function generateProblem() {
+  const ops = ['+', '-', '*', '/'];
+  let op1 = ops[Math.floor(Math.random() * ops.length)];
+  let op2 = ops[Math.floor(Math.random() * ops.length)];
 
-      let n1, n2, n3;
-      n1 = getRandomInt(2, 30);
-      n2 = getRandomInt(2, 30);
-      n3 = getRandomInt(2, 30);
+  let n1 = getRandomInt(2, 30);
+  let n2 = getRandomInt(2, 30);
+  let n3 = getRandomInt(2, 30);
 
-      if (op1 === '/') {
-        const divisor = getRandomInt(2, 15);
-        const quotient = getRandomInt(2, 15);
-        n2 = divisor;
-        n1 = divisor * quotient;
-      }
-      if (op2 === '/') {
-        const divisor = getRandomInt(2, 15);
-        const quotient = getRandomInt(2, 15);
-        n3 = divisor;
-        n2 = divisor * quotient;
-      }
+  if (op1 === '/') {
+    const divisor = getRandomInt(2, 15);
+    const quotient = getRandomInt(2, 15);
+    n2 = divisor;
+    n1 = divisor * quotient;
+  }
+  if (op2 === '/') {
+    const divisor = getRandomInt(2, 15);
+    const quotient = getRandomInt(2, 15);
+    n3 = divisor;
+    n2 = divisor * quotient;
+  }
 
-      currentExpression = `${n1} ${op1} ${n2} ${op2} ${n3}`;
-      try {
-        currentAnswer = eval(currentExpression);
-      } catch {
-        currentAnswer = "エラー";
-      }
+  currentExpression = `${n1} ${op1} ${n2} ${op2} ${n3}`;
+  try {
+    currentAnswer = eval(currentExpression);
+  } catch {
+    currentAnswer = "エラー";
+  }
 
-      document.getElementById('problem').textContent =
-        currentExpression.replace(/\*/g, '×').replace(/\//g, '÷');
-      document.getElementById('answer').style.display = 'none';
-      document.getElementById('nextBtn').style.display = 'none';
-    }
+  document.getElementById('problem').textContent =
+    currentExpression.replace(/\*/g, '×').replace(/\//g, '÷');
+  document.getElementById('answer').style.display = 'none';
+  document.getElementById('nextBtn').style.display = 'none';
+
+  problemCount++;
+
+  const encouragementDiv = document.getElementById('encouragement');
+  if (problemCount % 5 === 0) {
+    const message = encouragements[Math.floor(Math.random() * encouragements.length)];
+    encouragementDiv.textContent = `【${problemCount}問目】 ${message}`;
+    encouragementDiv.style.display = 'block';
+  } else {
+    encouragementDiv.style.display = 'none';
+  }
+}
 
     function showAnswer() {
       document.getElementById('answer').textContent = `答え: ${currentAnswer}`;
