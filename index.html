@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ランダム計算問題</title>
   <style>
     body {
@@ -21,11 +21,11 @@
       display: none;
     }
     #encouragement {
-      margin-top: 20px;
+      margin-top: 15px;
       font-size: 1.2em;
       font-weight: bold;
+      color: #e65100; /* オレンジ系 */
       display: none;
-      color: #2e7d32;
     }
     button {
       font-size: 1.2em;
@@ -58,7 +58,7 @@
       "がんばって！",
       "まだまだ行ける！？",
       "連続だからこそ慎重に！",
-      "集中できてる！",
+      "集中キープ中！ナイス！",
       "ここからが本番！"
     ];
 
@@ -66,64 +66,72 @@
       return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-function generateProblem() {
-  const ops = ['+', '-', '*', '/'];
-  let op1 = ops[Math.floor(Math.random() * ops.length)];
-  let op2 = ops[Math.floor(Math.random() * ops.length)];
+    function generateProblem() {
+      const ops = ['+', '-', '*', '/'];
+      let op1 = ops[Math.floor(Math.random() * ops.length)];
+      let op2 = ops[Math.floor(Math.random() * ops.length)];
 
-  let n1 = getRandomInt(2, 30);
-  let n2 = getRandomInt(2, 30);
-  let n3 = getRandomInt(2, 30);
+      let n1 = getRandomInt(2, 30);
+      let n2 = getRandomInt(2, 30);
+      let n3 = getRandomInt(2, 30);
 
-  // 除算調整（割り切れるように）
-  if (op1 === '/') {
-    const divisor = getRandomInt(2, 15);
-    const quotient = getRandomInt(2, 15);
-    n2 = divisor;
-    n1 = divisor * quotient;
-  } else if (op1 === '-' && n1 < n2) {
-    [n1, n2] = [n2, n1];  // 引き算で負になるのを防ぐ
-  }
+      // 除算調整（割り切れるように）
+      if (op1 === '/') {
+        const divisor = getRandomInt(2, 15);
+        const quotient = getRandomInt(2, 15);
+        n2 = divisor;
+        n1 = divisor * quotient;
+      }
 
-  if (op2 === '/') {
-    const divisor = getRandomInt(2, 15);
-    const quotient = getRandomInt(2, 15);
-    n3 = divisor;
-    n2 = divisor * quotient;
-  } else if (op2 === '-' && n2 < n3) {
-    [n2, n3] = [n3, n2];  // 引き算で負になるのを防ぐ
-  }
+      if (op2 === '/') {
+        const divisor = getRandomInt(2, 15);
+        const quotient = getRandomInt(2, 15);
+        n3 = divisor;
+        n2 = divisor * quotient;
+      }
 
-  currentExpression = `${n1} ${op1} ${n2} ${op2} ${n3}`;
-  try {
-    currentAnswer = eval(currentExpression);
-  } catch {
-    currentAnswer = "エラー";
-  }
+      // 引き算で負になるのを防ぐ
+      if (op1 === '-' && n1 < n2) [n1, n2] = [n2, n1];
+      if (op2 === '-' && n2 < n3) [n2, n3] = [n3, n2];
 
-  document.getElementById('problem').textContent =
-    currentExpression.replace(/\*/g, '×').replace(/\//g, '÷');
-  document.getElementById('answer').style.display = 'none';
-  document.getElementById('nextBtn').style.display = 'none';
-  document.getElementById('showBtn').style.display = 'inline-block';
+      // 特別処理: 式全体が「A - B × C」になる場合に負の値を防ぐ
+      if (op1 === '-' && op2 === '*') {
+        while (n1 < n2 * n3) {
+          n1 = getRandomInt(n2 * n3, 60); // n1が十分大きくなるよう調整
+        }
+      }
 
-  problemCount++;
+      currentExpression = `${n1} ${op1} ${n2} ${op2} ${n3}`;
+      try {
+        currentAnswer = eval(currentExpression);
+      } catch {
+        currentAnswer = "エラー";
+      }
 
-  const encouragementDiv = document.getElementById('encouragement');
-  if (problemCount % 5 === 0) {
-    const message = encouragements[Math.floor(Math.random() * encouragements.length)];
-    encouragementDiv.textContent = `【${problemCount}問目】 ${message}`;
-    encouragementDiv.style.display = 'block';
-  } else {
-    encouragementDiv.style.display = 'none';
-  }
-}
+      document.getElementById('problem').textContent =
+        currentExpression.replace(/\*/g, '×').replace(/\//g, '÷');
+      document.getElementById('answer').style.display = 'none';
+      document.getElementById('nextBtn').style.display = 'none';
+      document.getElementById('showBtn').style.display = 'inline-block';
+      document.getElementById('encouragement').style.display = 'none';
+    }
 
     function showAnswer() {
       document.getElementById('answer').textContent = `答え：${currentAnswer}`;
       document.getElementById('answer').style.display = 'block';
       document.getElementById('nextBtn').style.display = 'inline-block';
       document.getElementById('showBtn').style.display = 'none';
+
+      problemCount++;
+
+      const encouragementDiv = document.getElementById('encouragement');
+      if (problemCount % 5 === 0) {
+        const message = encouragements[Math.floor(Math.random() * encouragements.length)];
+        encouragementDiv.textContent = `【${problemCount}問目】 ${message}`;
+        encouragementDiv.style.display = 'block';
+      } else {
+        encouragementDiv.style.display = 'none';
+      }
     }
 
     window.onload = generateProblem;
