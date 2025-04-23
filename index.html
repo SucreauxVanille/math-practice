@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>計算問題トレーニング</title>
+  <title>ランダム計算</title>
   <style>
     body {
       font-family: sans-serif;
@@ -41,7 +41,7 @@
   </style>
 </head>
 <body>
-  <h1>計算問題トレーニング</h1>
+  <h1>ランダム計算</h1>
   <div id="problem">問題を読み込み中...</div>
   <div>
     <button id="showAnswerBtn">答えを表示</button>
@@ -60,13 +60,13 @@
     const encouragements = [
       "がんばって！",
       "まだまだ行ける！？",
-      "連続だからこそ慎重に！",
+      "慎重に！",
       "集中できてる！",
       "うっかりミス注意！"
     ];
 
     function generateProblem() {
-      let ops = ['+', '-', '*', '/'];
+      let ops = ['+', '-', '×', '÷'];
       let op1 = ops[Math.floor(Math.random() * ops.length)];
       let op2 = ops[Math.floor(Math.random() * ops.length)];
 
@@ -121,7 +121,7 @@
 
       if (questionCount % 5 === 0) {
         const msg = encouragements[Math.floor(Math.random() * encouragements.length)];
-        document.getElementById("message").innerText = `今${questionCount}問目！${msg}`;
+        document.getElementById("message").innerText = `${questionCount}問目！${msg}`;
       }
     });
 
